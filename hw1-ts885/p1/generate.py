@@ -20,25 +20,29 @@ def generate_watermark(id):
     return watermark
 
 
+def hash_to_bin(s):
+    return bin(int(sha256(s).hexdigest(), base=16)).lstrip('0b').zfill(256)
+
+
 def find_coins(k, n, watermark): 
     collide_map = {}
     while True:
         # Generate 6 random bytes
         random_bytes = secrets.token_bytes(6)
-        random_hex = random_bytes.hex()
         # Generate preimage, 8 bytes total
-        preimage = watermark + random_hex
-        hashed_preimage = sha256(preimage.encode('utf-8')).hexdigest()
+        preimage = bytes.fromhex(watermark) + random_bytes
+        # Get full binay SHA-256 hash
+        hash_bin = hash_to_bin(preimage) 
+        short_hashed_preimage = hash_bin[:n]
 
-        short_hashed_preimage = hashed_preimage[:n // 4]
-        
-        # add to map and count 
         if short_hashed_preimage in collide_map:
-            collide_map[short_hashed_preimage].append(preimage)
-            if len(collide_map[short_hashed_preimage]) == k:
-                return collide_map[short_hashed_preimage]
+            if preimage.hex() not in collide_map[short_hashed_preimage]: 
+                collide_map[short_hashed_preimage].append(preimage.hex())
+                if len(collide_map[short_hashed_preimage]) == k:
+                    return collide_map[short_hashed_preimage]  # Return when we have 4 collisions
         else:
-            collide_map[short_hashed_preimage] = [preimage]
+            collide_map[short_hashed_preimage] = [preimage.hex()]
+
 
 def generate_coin_txt():
     watermark = generate_watermark(netid)
@@ -50,12 +54,14 @@ def generate_coin_txt():
         for coin in colliding_coins:
             f.write(coin + "\n")
 
+
 def generate_random_id():
     # pick 2 or 3 letters
     letters = random.choices(string.ascii_lowercase, k=random.choice([2, 3])) 
     # pick 1 to 10 digits 
     numbers = random.choices(string.digits, k=random.randint(1, 10)) 
     return "".join(letters + numbers)
+
 
 def find_forged_id(watermark):
     attempts = 0
@@ -75,6 +81,7 @@ def find_forged_id(watermark):
         if attempts == 1000000000: 
             print(f"Tried 100000000 netids already ...")
             break
+
 
 def generate_forged_watermark():
     watermark = generate_watermark(netid)
