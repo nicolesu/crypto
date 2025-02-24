@@ -60,7 +60,7 @@ class MerkleTree:
             
 			if sibling_index < len(level):
 				proof.append(level[sibling_index])
-			# this was taken from chatgpt
+			# move up the level to find parents 
 			position //= 2
 
 		return proof
