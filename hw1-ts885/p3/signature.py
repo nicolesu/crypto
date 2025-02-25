@@ -35,16 +35,54 @@ class MTSignature:
 
     # Populate the fields self.treenodes, self.sk and self.pk. Returns self.pk.
     def KeyGen(self, seed: int) -> string:
-        raise NotImplementedError
+        key_pairs = KeyPairGen(self.d, seed)
+        self.sk = list(key_pairs.keys())
+        leaves = list(key_pairs.values())
+        # populate the leaf level
+        self.treenodes[self.d] = leaves
+        
+         #populate the rest of the levels bottom up
+        for level in range(self.d -1, -1, -1):
+            for i in range(2 **  level):
+                left = self.treenodes[level+1][2*i]
+                right = self.treenodes[level+1][2*i+1]
+                # first convert i into 256 bit binary string
+                self.treenodes[level][i] = SHA(format(i, "b").zfill(256)+ left + right)
+
+        self.pk = self.treenodes[0][0]
+        return self.pk
+        # raise NotImplementedError
 
     # Returns the path SPj for the index j
     # The order in SPj follows from the leaf to the root.
     def Path(self, j: int) -> string:
-        raise NotImplementedError
+        path = []
+        position = j
+        for level in range(self.d, 0, -1):
+            is_right = position % 2
+            sibling_index = position - 1 if is_right else position + 1
+            path.append(self.treenodes[level][sibling_index])
+            # move up the level 
+            position //= 2
+        #print(path)
+        return ''.join(path)
+       # raise NotImplementedError
 
     # Returns the signature. The format of the signature is as follows: ([sigma], [SP]).
     # The first is a sequence of sigma values and the second is a list of sibling paths.
     # Each sibling path is in turn a d-length list of tree node values. 
     # All values are 64 bytes. Final signature is a single string obtained by concatentating all values.
     def Sign(self, msg: string) -> string:
-        return NotImplementedError
+        indices = []
+        for i in range(1, self.k + 1):
+            combined_string = str(i) + msg
+            hashed_value = SHA(combined_string)
+            digit_value = toDigit(hashed_value)
+            index = digit_value % (1 << self.d)
+            indices.append(index)
+        # indices = [toDigit(SHA(str(i) + msg)) % (1 << self.d) for i in range(1, self.k + 1)]
+        sigma = [self.sk[i] for i in indices]
+        paths = [self.Path(i) for i in indices]
+        
+        return ''.join(sigma) + ''.join([''.join(p) for p in paths])
+       # return NotImplementedError
