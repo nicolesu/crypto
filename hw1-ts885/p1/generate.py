@@ -38,8 +38,9 @@ def find_coins(k, n, watermark):
         if short_hashed_preimage in collide_map:
             if preimage.hex() not in collide_map[short_hashed_preimage]: 
                 collide_map[short_hashed_preimage].append(preimage.hex())
+                # Return when we have k (4) collisions
                 if len(collide_map[short_hashed_preimage]) == k:
-                    return collide_map[short_hashed_preimage]  # Return when we have 4 collisions
+                    return collide_map[short_hashed_preimage]
         else:
             collide_map[short_hashed_preimage] = [preimage.hex()]
 

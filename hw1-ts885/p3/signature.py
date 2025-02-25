@@ -75,14 +75,21 @@ class MTSignature:
     def Sign(self, msg: string) -> string:
         indices = []
         for i in range(1, self.k + 1):
-            combined_string = str(i) + msg
+            # compute Zj
+            combined_string = format(i, "b").zfill(256) + msg
             hashed_value = SHA(combined_string)
             digit_value = toDigit(hashed_value)
-            index = digit_value % (1 << self.d)
+            # convert hexadecimal string to integer before computing mod
+            index = digit_value % (2** self.d)
+             #index = hashed_value % (2** self.d)
             indices.append(index)
-        # indices = [toDigit(SHA(str(i) + msg)) % (1 << self.d) for i in range(1, self.k + 1)]
-        sigma = [self.sk[i] for i in indices]
-        paths = [self.Path(i) for i in indices]
         
+        sigma = []
+        paths = []
+        for  i in indices:
+            sigma.append(self.sk[i])
+            paths.append(self.Path(i))
+        
+        # return the concactenated string
         return ''.join(sigma) + ''.join([''.join(p) for p in paths])
        # return NotImplementedError
