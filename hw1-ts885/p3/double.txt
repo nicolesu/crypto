@@ -1,5 +1,11 @@
 Minimum d for collision probability < 50%: 16
-Answer computed using the below function:
+Explnation: With k = 1, each message is signed using a single leaf in a Merkle tree of depth d.
+Therefore, we are just concerned with the probability that two different messages will have the same signature.
+This is a birthday paradox scenario, where we randomly select n elements from a set of 2^d possible signature.
+The probability of at least one collision among n messages is approximated by: P(Collision) ~= 1- e^(-n*(n-1)/2^(d+1))
+where n =200 and e is the base of the natural logarithm (approximately 2.71828). 
+Plug in the numbers with the help of chatgpt gives the answer ~= 16. 
+The answer was alo computed directly using the below function:
 
 ***
 def ComputeDoubleSignature():
