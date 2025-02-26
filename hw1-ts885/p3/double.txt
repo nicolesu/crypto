@@ -1,0 +1,15 @@
+Minimum d for collision probability < 50%: 16
+Answer computed using the below function:
+
+***
+def ComputeDoubleSignature():
+    target_prob = 0.5
+    n = 200  
+    # just a starting point
+    d = 1
+    while (n ** 2) / (2 ** (d + 1)) >= target_prob:
+        d += 1
+        
+    with open("double.txt", "w") as f:
+        f.write(f"Minimum d for collision probability < 50%: {d}\n")
+***
