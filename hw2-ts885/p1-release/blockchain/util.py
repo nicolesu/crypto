@@ -20,7 +20,8 @@ def sha256_2_string(string_to_hash):
     byte_data = string_to_hash.encode('utf-8')
 
     first_hash = sha256(byte_data).digest() 
-    second_hash = sha256(first_hash).hexdigest()  # Convert to hex string
+    # Convert to hex string
+    second_hash = sha256(first_hash).hexdigest()
     return second_hash
     # Placeholder for (1a)
     # return "deadbeef" + hex(int(random.random() * 10000000))[2:]

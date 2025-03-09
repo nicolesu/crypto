@@ -25,9 +25,16 @@ class PoWBlock(Block):
         Returns:
             int: The consensus weight of a block, rounded to integer.
         """
-
         # Placeholder for (1a)
-        return 1
+        # return 1
+        max_target = 2**256
+        
+        # Check if target is within range
+        if self.target < 1 or self.target > max_target:
+            return 0
+        
+        # Weight is the ratio of maximum target to block's target, rounded to nearest integer
+        return round(max_target / self.target)
 
     def mine(self):
         """ PoW mining loop; attempts to seal a block with new seal data until the seal is valid
