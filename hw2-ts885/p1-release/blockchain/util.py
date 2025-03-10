@@ -1,3 +1,4 @@
+import binascii
 import random
 from ecdsa import SigningKey, VerifyingKey
 from hashlib import sha256
