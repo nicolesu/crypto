@@ -88,9 +88,20 @@ class Blockchain(persistent.Persistent):
             (:obj:`list` of str): list of all blocks in the chain between desired block and genesis.
         """
 
-        # Paste your answers to problem 1 here
+        if block_hash not in self.blocks:
+            return []
         
-        return [block_hash]
+        chain = []
+        current_hash = block_hash
+        while True:
+            chain.append(current_hash)
+            current_block = self.blocks[current_hash]
+            if current_block.is_genesis:
+                break
+            else:
+                current_hash = current_block.parent_hash
+        return chain        
+        # return [block_hash]
 
     def get_all_block_weights(self):
         """ Get total weight for every block in the blockchain database.

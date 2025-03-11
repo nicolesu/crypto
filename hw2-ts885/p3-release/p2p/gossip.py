@@ -46,6 +46,10 @@ def gossip_message(type, message):
 
     # (placeholder for 3.1)
     # implement here
+    self_node_id = config.node_id
+    for key, value in config.PEERS.items():
+        if key != self_node_id:
+            send_message(value, type, message)
 
 def handle_message(type, message, sender):
     """ Used to handle an incoming message sent by another node (heh-heh-heyyyy!).
