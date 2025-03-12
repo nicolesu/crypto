@@ -272,14 +272,17 @@ class Block(ABC, persistent.Persistent):
 
                 # each input_ref points to a transaction on the same blockchain as this block [test_input_txs_on_chain]
                 # (or in this block; you will have to check this manually) [test_input_txs_in_block]
-                # (you may find chain.blocks_containing_tx.get and nonempty_intersection as above helpful)
                 # On failure: return False, "Input transaction not found"
-                # check if input transaction is on the same block   
                 if in_tx_hash in chain.blocks_containing_tx:
                     # check if input transaction is on same chain
-                    containing_blocks = chain.blocks_containing_tx.get(in_tx_hash, None)
+                    containing_blocks = chain.blocks_containing_tx[in_tx_hash]
                     if not nonempty_intersection(containing_blocks, curr_chain):
-                        return False, "Input transaction not found"
+                        # If not on chain, check if it's in the current block
+                        if in_tx_hash not in tx_hashes_in_block:
+                            return False, "Input transaction not found"
+                elif in_tx_hash not in tx_hashes_in_block:
+                    # If not in chain.blocks_containing_tx and not in current block
+                    return False, "Input transaction not found"
             
 
                 input_sum += input_tx.outputs[in_output_idx].amount
