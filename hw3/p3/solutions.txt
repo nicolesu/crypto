@@ -1,0 +1,6 @@
+18RwKzXtL5YGvFwa9BHrPRvqXLkdYWsGfp: 3 (CoinCloud)
+1MTbp4bFftessrbTTpM5SC5Ap1iKaMHrM7: 1 (Grams Helix)
+1BCaztysy2paguXjuC8c652vckNMks69ce: 2 (Bitcoin Fog)
+13MUZ1Qk36LqExdcSRDZCxNRP1pcz1b5mT: 4 (PenguinMixer)
+
+To deanonymize the transactions, I used Blockchain.com to analyze the total amount of BTC each input and output address received. By comparing the “Total received” values, I looked for matches where an output address received an amount slightly less than one of the input addresses—accounting for a small, randomized mixing fee. Using the relationship output = input – fee, I was able to identify which output address corresponded to each input, effectively deanonymizing the transactions.
