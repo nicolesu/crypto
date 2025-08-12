@@ -1,0 +1,3 @@
+Similar to lost ethr, the bonuscap was set to 0.0031337 ETH so I called depositwithbonus() and sent 0.004 ETH, exceeding the bonus cap.
+Due to the broken modifier, the function skipped the refund and accepted my ETH anyway.
+No tokens were minted, and totaleth did not increase — but the contract balance increased.

@@ -1,0 +1,4 @@
+The bonuscap was set to a low value (0.0031337 ETH), so I called depositwithbonus() with a value of 0.004 ETH, exceeding the cap.
+Due to the broken modifier, the refund logic was skipped, but my ETH was still accepted.
+No tokens were minted, and totaleth didn’t update — but the contract balance increased.
+This created an inconsistency between totaleth and address(this).balance.

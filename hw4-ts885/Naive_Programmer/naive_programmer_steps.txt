@@ -1,0 +1,3 @@
+If you call revealVote with a non-existent commit, the smart contract doesn't stop or revert — it continues executing normally.
+By initiating two transactions that call revealVote and vote for Bob,
+the votesForChoice2 variable can be updated and end up surpassing votesForChoice1.

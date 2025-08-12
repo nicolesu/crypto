@@ -1,0 +1,3 @@
+I deployed a separate contract with a selfdestruct() function and then I sent Ether to the wrapped ETH contract using selfdestruct, which force-sends ETH directly.
+This increased the contract's ETH balance without updating totalSupply.(dont use mint() or burn(), which would have kept things consistent.)
+As a result, address(this).balance > totalSupply, breaking the invariant.
